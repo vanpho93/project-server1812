@@ -4,7 +4,7 @@ Dang ky
 
 Dang nhap
 
-*Check
+Check
 
 Gui yeu cau ket ban
 
@@ -21,8 +21,9 @@ Xoa bai
 
 Cap nhat bai viet
 
-*Like Bai viet
+Like Bai viet
 
+Bo like bai viet 
 --------
 *Comment
 
@@ -34,4 +35,4 @@ Cap nhat bai viet
 
 *Cap nhat Comment
 
-*Like Comment
+*Bo Like Comment

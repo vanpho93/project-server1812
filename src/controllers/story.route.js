@@ -5,9 +5,10 @@ const parser = require('body-parser').json();
 const Story = require('../models/story.model');
 const { mustBeUser } = require('./mustBeUser');
 
-storyRouter.get('/', (req, res) => {});
+storyRouter.use(parser);
+storyRouter.use(mustBeUser);
 
-storyRouter.post('/', mustBeUser, parser, (req, res) => {
+storyRouter.post('/', (req, res) => {
     Story.createStory(req.idUser, req.body.content)
     .then(story => res.send({ success: true, story }))
     .catch(error => {
@@ -15,7 +16,7 @@ storyRouter.post('/', mustBeUser, parser, (req, res) => {
     });
 });
 
-storyRouter.delete('/:id', mustBeUser, (req, res) => {
+storyRouter.delete('/:id', (req, res) => {
     Story.removeStory(req.idUser, req.params.id)
     .then(story => res.send({ success: true, story }))
     .catch(error => {
@@ -24,8 +25,27 @@ storyRouter.delete('/:id', mustBeUser, (req, res) => {
     });
 });
 
-storyRouter.put('/:id', mustBeUser, parser, (req, res) => {
+storyRouter.put('/:id', (req, res) => {
     Story.updateStory(req.idUser, req.params.id, req.body.content)
+    .then(story => res.send({ success: true, story }))
+    .catch(error => {
+        res.status(error.statusCode)
+        .send({ success: false, code: error.code, message: error.message });
+    });
+});
+
+storyRouter.post('/like/:idStory', (req, res) => {
+    Story.likeStory(req.idUser, req.params.idStory)
+    .then(story => res.send({ success: true, story }))
+    .catch(error => {
+        res.status(error.statusCode)
+        .send({ success: false, code: error.code, message: error.message });
+    });
+});
+
+
+storyRouter.post('/dislike/:idStory', (req, res) => {
+    Story.dislikeStory(req.idUser, req.params.idStory)
     .then(story => res.send({ success: true, story }))
     .catch(error => {
         res.status(error.statusCode)
