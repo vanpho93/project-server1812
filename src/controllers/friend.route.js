@@ -11,7 +11,7 @@ friendRouter.use(parser);
 friendRouter.post('/request', (req, res) => {
     const { idReceiver } = req.body;
     User.sendFriendRequest(req.idUser, idReceiver)
-    .then(() => res.send({ success: true, idReceiver }))
+    .then(user => res.send({ success: true, user }))
     .catch(error => res.status(error.statusCode).send({ success: false, message: error.message, code: error.code }));
 });
 
@@ -28,4 +28,4 @@ friendRouter.delete('/:friendId', (req, res) => {
     .catch(error => res.status(error.statusCode).send({ success: false, message: error.message, code: error.code }));
 });
 
-module.exports = { userRouter };
+module.exports = { friendRouter };

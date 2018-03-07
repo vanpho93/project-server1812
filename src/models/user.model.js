@@ -53,17 +53,19 @@ class User extends UserModel {
         const sender = await User.findByIdAndUpdate(idSender, { $addToSet: { sentRequests: idReceiver } })
         .catch(error => { throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404); });
         if (!sender) throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404); 
-        const receiver = await User.findByIdAndUpdate(idReceiver, { $addToSet: { incommingRequests: idSender } })
+        const receiver = await User.findByIdAndUpdate(idReceiver, { $addToSet: { incommingRequests: idSender } }).select(['name', 'stories'])
         .catch(error => { throw new MyError('Cannot find receiver.', 'CANNOT_FIND_RECEIVER', 404); });
         if (!receiver) throw new MyError('Cannot find receiver.', 'CANNOT_FIND_RECEIVER', 404); 
         return receiver;
     }
 
     static async acceptFriendRequest(idReceiver, idSender) {
+        const isRequestSent = await User.findOne({ _id: idReceiver, incommingRequests: { $elemMatch: idSender } })
+        if (!isRequestSent) throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404);
         const sender = await User.findByIdAndUpdate(idSender, { $pull: { sentRequests: idReceiver }, $addToSet: { friends: idReceiver } })
         .catch(error => { throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404); });
         if (!sender) throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404); 
-        const receiver = await User.findByIdAndUpdate(idReceiver, { $pull: { incommingRequests: idSender }, $addToSet: { friends: idSender } })
+        const receiver = await User.findByIdAndUpdate(idReceiver, { $pull: { incommingRequests: idSender }, $addToSet: { friends: idSender } }).select(['name', 'stories'])
         .catch(error => { throw new MyError('Cannot find receiver.', 'CANNOT_FIND_RECEIVER', 404); });
         if (!receiver) throw new MyError('Cannot find receiver.', 'CANNOT_FIND_RECEIVER', 404); 
         return sender;
@@ -74,7 +76,7 @@ class User extends UserModel {
         .catch(error => { throw new MyError('Cannot find sender.', 'CANNOT_FIND_USER', 404); });
         if (!user) throw new MyError('Cannot find sender.', 'CANNOT_FIND_USER', 404); 
         const friend = await User.findByIdAndUpdate(idFriend, { $pull: { friends: idUser } })
-        .catch(error => { throw new MyError('Cannot find receiver.', 'CANNOT_FIND_FRIEND', 404); });
+        .catch(error => { throw new MyError('Cannot find receiver.', 'CANNOT_FIND_FRIEND', 404); }).select(['name', 'stories'])
         if (!friend) throw new MyError('Cannot find receiver.', 'CANNOT_FIND_FRIEND', 404); 
         return friend;
     }
