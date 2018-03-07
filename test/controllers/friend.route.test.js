@@ -87,7 +87,7 @@ describe('POST /friend/accept', () => {
     });
 });
 
-describe.only('DELETE /friend/:id', () => {
+describe('DELETE /friend/:id', () => {
     let idUser1, idUser2, token1, token2;
     beforeEach('Create users and send friend request for test', async () => {
         await User.signUp('a@gmail.com', '123', 'teo', '321');
@@ -102,5 +102,31 @@ describe.only('DELETE /friend/:id', () => {
         await User.acceptFriendRequest(idUser2, idUser1);
     });
 
+    it('Can remove friend by DELETE', async () => {
+        const response = await request(app).delete(`/friend/${idUser2}`).set({ token: token1 });
+        assert.equal(response.status, 200);
+        const sender = await User.findById(idUser1).populate('friends');
+        const receiver = await User.findById(idUser2).populate('friends');
+        assert.equal(sender.friends.length, 0);
+        assert.equal(receiver.friends.length, 0);
+    });
+
+    it('Cannot remove friend without token', async () => {
+        const response = await request(app).delete(`/friend/${idUser2}`);
+        assert.equal(response.status, 400);
+        const sender = await User.findById(idUser1).populate('friends');
+        const receiver = await User.findById(idUser2).populate('friends');
+        assert.equal(sender.friends.length, 1);
+        assert.equal(receiver.friends.length, 1);
+    });
+
+    it('Cannot remove friend with wrong friendId', async () => {
+        const response = await request(app).delete(`/friend/${idUser2}x`).set({ token: token1 });
+        assert.equal(response.status, 404);
+        const sender = await User.findById(idUser1).populate('friends');
+        const receiver = await User.findById(idUser2).populate('friends');
+        assert.equal(sender.friends.length, 1);
+        assert.equal(receiver.friends.length, 1);
+    });
 });
 

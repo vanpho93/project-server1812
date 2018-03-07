@@ -4,13 +4,13 @@ Dang ky
 
 Dang nhap
 
-Check
+*Check
 
-*Gui yeu cau ket ban
+Gui yeu cau ket ban
 
-*Xac nhan yeu cau ket ban
+Xac nhan yeu cau ket ban
 
-*Xoa ban
+Xoa ban
 -------
 
 Story
