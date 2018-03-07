@@ -19,7 +19,7 @@ friendRouter.post('/accept', (req, res) => {
     const { idSender } = req.body;
     User.acceptFriendRequest(req.idUser, idSender)
     .then(friend => res.send({ success: true, friend }))
-    .catch(error => res.status(error.statusCode).send({ success: false, message: error.message, code: error.code }));
+    .catch(error =>  res.status(error.statusCode).send({ success: false, message: error.message, code: error.code }));
 });
 
 friendRouter.delete('/:friendId', (req, res) => {

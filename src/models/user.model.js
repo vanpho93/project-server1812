@@ -60,7 +60,7 @@ class User extends UserModel {
     }
 
     static async acceptFriendRequest(idReceiver, idSender) {
-        const isRequestSent = await User.findOne({ _id: idReceiver, incommingRequests: { $elemMatch: idSender } })
+        const isRequestSent = await User.findOne({ _id: idReceiver, incommingRequests: { $all: [idSender] } })
         if (!isRequestSent) throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404);
         const sender = await User.findByIdAndUpdate(idSender, { $pull: { sentRequests: idReceiver }, $addToSet: { friends: idReceiver } })
         .catch(error => { throw new MyError('Cannot find sender.', 'CANNOT_FIND_SENDER', 404); });
