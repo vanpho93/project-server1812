@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const storySchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     content: { type: String, required: true, trim: true },
-    fans: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    fans: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 const StoryModel = mongoose.model('Story', storySchema);
