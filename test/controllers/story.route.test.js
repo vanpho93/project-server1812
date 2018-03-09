@@ -200,7 +200,7 @@ describe('Test POST /story/like/:idStory', () => {
     });
 });
 
-describe.only('Test POST /story/dislike/:idStory', () => {
+describe('Test POST /story/dislike/:idStory', () => {
     let idUser1, idUser2, idStory, token1, token2;
     beforeEach('Create story and like it for test', async () => {
         await User.signUp('a@gmail.com', '123', 'teo', '321');

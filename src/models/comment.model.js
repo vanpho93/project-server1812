@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
+const { Types } = require('mongoose');
 const User = require('./user.model');
 const Story = require('./story.model');
 const MyError = require('../lib/MyError');
+const { checkObjectId } = require('../lib/checkObjectId');
+
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
@@ -15,6 +18,7 @@ const CommentModel = mongoose.model('Comment', commentSchema);
 
 class Comment extends CommentModel {
     static async createComment(idUser, idStory, content) {
+        checkObjectId([idUser, idStory]);
         const comment = new Comment({ author: idUser, content, story: idStory });
         await comment.save();
         const updateObject = { $addToSet: { comments: comment._id } };
